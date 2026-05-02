@@ -81,13 +81,16 @@ export async function processSyncQueue(token: string) {
         },
         body: JSON.stringify(item.payload),
       })
+      if (item.id === undefined) continue
       if (response.ok) {
-        await db.syncQueue.delete(item.id!)
+        await db.syncQueue.delete(item.id)
       } else {
-        await db.syncQueue.update(item.id!, { retries: item.retries + 1 })
+        await db.syncQueue.update(item.id, { retries: item.retries + 1 })
       }
     } catch {
-      await db.syncQueue.update(item.id!, { retries: item.retries + 1 })
+      if (item.id !== undefined) {
+        await db.syncQueue.update(item.id, { retries: item.retries + 1 })
+      }
     }
   }
 }

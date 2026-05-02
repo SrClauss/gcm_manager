@@ -28,7 +28,7 @@ interface SearchedVehicle { id: number; plate: string; model: string; location: 
 
 export default function PatrolReport() {
   const navigate = useNavigate()
-  const [shiftOpen] = useState(new Date().toISOString().slice(0, 16))
+  const [shiftStartTime] = useState(new Date().toISOString().slice(0, 16))
   const [sector, setSector] = useState('')
   const [kmInitial, setKmInitial] = useState('')
   const [crossings, setCrossings] = useState<SchoolCrossing[]>([])
@@ -49,7 +49,7 @@ export default function PatrolReport() {
     e.preventDefault()
     const payload = {
       date: new Date().toISOString(),
-      shift_open: new Date(shiftOpen).toISOString(),
+      shift_open: new Date(shiftStartTime).toISOString(),
       sector,
       km_initial: kmInitial ? parseInt(kmInitial) : undefined,
       auxiliary_ids: [],
@@ -125,7 +125,7 @@ export default function PatrolReport() {
           fullWidth
           label="Abertura do Turno"
           type="datetime-local"
-          defaultValue={shiftOpen}
+          defaultValue={shiftStartTime}
           InputLabelProps={{ shrink: true }}
           sx={{ mb: 2 }}
         />

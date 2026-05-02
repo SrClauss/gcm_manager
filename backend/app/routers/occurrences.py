@@ -211,18 +211,17 @@ async def upload_sketch(
 
     content = await file.read()
     ext = _detect_image_ext(content)
-    filename = os.path.basename(f"sketch_{occurrence_id}_{uuid.uuid4().hex}.{ext}")
+    # Filename uses only UUID — no user-supplied data in the path
+    safe_name = f"sketch_{uuid.uuid4().hex}.{ext}"
     upload_base = os.path.realpath(settings.UPLOAD_DIR)
     sketches_dir = os.path.realpath(os.path.join(upload_base, "sketches"))
     os.makedirs(sketches_dir, exist_ok=True)
-    dest = os.path.realpath(os.path.join(sketches_dir, filename))
-    if not dest.startswith(sketches_dir + os.sep) and dest != sketches_dir:
-        raise HTTPException(status_code=400, detail="Caminho de arquivo inválido")
+    dest = os.path.join(sketches_dir, safe_name)
 
     async with aiofiles.open(dest, "wb") as f:
         await f.write(content)
 
-    occurrence.sketch_url = f"/uploads/sketches/{filename}"
+    occurrence.sketch_url = f"/uploads/sketches/{safe_name}"
     db.add(occurrence)
     return {"sketch_url": occurrence.sketch_url}
 
@@ -247,17 +246,16 @@ async def upload_document_photo(
 
     content = await file.read()
     ext = _detect_image_ext(content)
-    filename = os.path.basename(f"doc_{person_id}_{uuid.uuid4().hex}.{ext}")
+    # Filename uses only UUID — no user-supplied data in the path
+    safe_name = f"doc_{uuid.uuid4().hex}.{ext}"
     upload_base = os.path.realpath(settings.UPLOAD_DIR)
     docs_dir = os.path.realpath(os.path.join(upload_base, "documents"))
     os.makedirs(docs_dir, exist_ok=True)
-    dest = os.path.realpath(os.path.join(docs_dir, filename))
-    if not dest.startswith(docs_dir + os.sep) and dest != docs_dir:
-        raise HTTPException(status_code=400, detail="Caminho de arquivo inválido")
+    dest = os.path.join(docs_dir, safe_name)
 
     async with aiofiles.open(dest, "wb") as f:
         await f.write(content)
 
-    person.document_photo_url = f"/uploads/documents/{filename}"
+    person.document_photo_url = f"/uploads/documents/{safe_name}"
     db.add(person)
     return {"document_photo_url": person.document_photo_url}

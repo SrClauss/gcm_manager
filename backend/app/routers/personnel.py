@@ -102,7 +102,7 @@ async def get_license_alerts(
             and_(
                 User.driver_license_expiry.isnot(None),
                 User.driver_license_expiry <= alert_cutoff,
-                User.is_active == True,
+                User.is_active.is_(True),
             )
         )
     )

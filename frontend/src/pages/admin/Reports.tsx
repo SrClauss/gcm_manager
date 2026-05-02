@@ -86,7 +86,7 @@ export default function ReportsPage() {
             <ArrowBackIcon />
           </IconButton>
           <Typography variant="h6" sx={{ ml: 1, flexGrow: 1, fontWeight: 'bold' }}>
-            Relatórios &amp; BI
+            Relatórios & BI
           </Typography>
         </Toolbar>
       </AppBar>
