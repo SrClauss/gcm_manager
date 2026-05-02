@@ -19,7 +19,15 @@ let isRefreshing = false
 let failedQueue: Array<{ resolve: (token: string) => void; reject: (err: unknown) => void }> = []
 
 function processQueue(error: unknown, token: string | null) {
-  failedQueue.forEach((p) => (error ? p.reject(error) : p.resolve(token!)))
+  failedQueue.forEach((p) => {
+    if (error) {
+      p.reject(error)
+    } else if (token) {
+      p.resolve(token)
+    } else {
+      p.reject(new Error('Token is null'))
+    }
+  })
   failedQueue = []
 }
 

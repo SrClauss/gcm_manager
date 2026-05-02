@@ -87,7 +87,8 @@ export default function MapPage() {
 
   useEffect(() => {
     if (!markersLayer.current) return
-    markersLayer.current.clearLayers()
+    const layer = markersLayer.current
+    layer.clearLayers()
 
     points.forEach((p) => {
       const color = TYPE_COLORS[p.type] || '#9e9e9e'
@@ -100,7 +101,7 @@ export default function MapPage() {
         .bindPopup(
           `<strong>${p.code}</strong><br>${p.type}<br>${p.nature}<br>${p.address}<br><small>${new Date(p.date).toLocaleString('pt-BR')}</small>`,
         )
-        .addTo(markersLayer.current!)
+        .addTo(layer)
     })
   }, [points])
 
