@@ -10,7 +10,7 @@ passlib[bcrypt]==1.7.4
 python-multipart==0.0.22
 geoalchemy2==0.14.2
 psycopg2-binary==2.9.9
-Pillow==10.3.0
+Pillow==12.2.0
 python-dotenv==1.0.0
 aiofiles==23.2.1
 httpx==0.25.2
