@@ -211,11 +211,13 @@ async def upload_sketch(
 
     content = await file.read()
     ext = _detect_image_ext(content)
-    filename = f"sketch_{occurrence_id}_{uuid.uuid4().hex}.{ext}"
+    filename = os.path.basename(f"sketch_{occurrence_id}_{uuid.uuid4().hex}.{ext}")
     upload_base = os.path.realpath(settings.UPLOAD_DIR)
-    sketches_dir = os.path.join(upload_base, "sketches")
+    sketches_dir = os.path.realpath(os.path.join(upload_base, "sketches"))
     os.makedirs(sketches_dir, exist_ok=True)
-    dest = os.path.join(sketches_dir, filename)
+    dest = os.path.realpath(os.path.join(sketches_dir, filename))
+    if not dest.startswith(sketches_dir + os.sep) and dest != sketches_dir:
+        raise HTTPException(status_code=400, detail="Caminho de arquivo inválido")
 
     async with aiofiles.open(dest, "wb") as f:
         await f.write(content)
@@ -245,11 +247,13 @@ async def upload_document_photo(
 
     content = await file.read()
     ext = _detect_image_ext(content)
-    filename = f"doc_{person_id}_{uuid.uuid4().hex}.{ext}"
+    filename = os.path.basename(f"doc_{person_id}_{uuid.uuid4().hex}.{ext}")
     upload_base = os.path.realpath(settings.UPLOAD_DIR)
-    docs_dir = os.path.join(upload_base, "documents")
+    docs_dir = os.path.realpath(os.path.join(upload_base, "documents"))
     os.makedirs(docs_dir, exist_ok=True)
-    dest = os.path.join(docs_dir, filename)
+    dest = os.path.realpath(os.path.join(docs_dir, filename))
+    if not dest.startswith(docs_dir + os.sep) and dest != docs_dir:
+        raise HTTPException(status_code=400, detail="Caminho de arquivo inválido")
 
     async with aiofiles.open(dest, "wb") as f:
         await f.write(content)
